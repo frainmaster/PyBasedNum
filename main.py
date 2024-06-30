@@ -2,6 +2,10 @@ class WrongBaseException(BaseException):
     pass
 
 
+class NonTerminatingDecimalException(BaseException):
+    pass
+
+
 class BasedInt:
     def __init__(self, num: int, base: int):
         if base in [-1, 0, 1]:
@@ -17,10 +21,14 @@ class BasedInt:
     def number_to_base(n, b):
         if n == 0:
             return [0]
+        is_negative = n < 0
+        n = abs(n)
         digits = []
         while n:
             digits.append(int(n % b))
             n //= b
+        if is_negative:
+            digits.append("-")
         return digits[::-1]
 
     def __add__(self, other):
@@ -99,6 +107,7 @@ if __name__ == "__main__":
     print("subtraction")
     print(n1 - 12)
     print(n1 - n2)
+    print(n1 - 45)
 
     print("multiplication")
     print(n1 * 12)
@@ -116,39 +125,39 @@ if __name__ == "__main__":
     No issues with addition, subtraction & multiplication as
     floating points are not involved.
     Need to think of a way to do division while maintaining floating points.
-    
+
     USE CASE A: Division with no remainders.
     1.
     [5,5]_7 / 4
     = 40 / 4
     = 10
     = [1,3]_7
-    
+
     2.
     [5,5]_7 / 10
     = 40 / 10
     = 4
     = [4]_7
-    
+
     3.  # ideally should be the same as above
     [5,5]_7 / [4]_7
     = 40 / 4
     = 10
     = [1,3]_7
-    
+
     4.
     [5,5]_7 / [1,3]_7
     = 40 / 10
     = 4
     = [4]_7
-    
+
     USE CASE B: Division with remainders.
     1.
     [5,5]_7 / 3
     = 40 / 3
     = 13.3333...
     = ?
-    
+
     2.
     [5,5]_7 / [3]_7
     = ?
